@@ -37,6 +37,10 @@ var interior = false;
 var activate = false;
 var objAct = false;
 
+var cTop;
+var cBottom;
+var cRight;
+var cLeft;
 //Postacie
 var Player = function(x, y) 	//GRACZ
 {	
@@ -505,6 +509,15 @@ function scrollControll(){
 	}
 }
 
+function mapChangeControll(worldTile){
+	
+	if(worldTile == 0 && cLeft > width){
+		worldTile++;
+		console.log(worldTile)
+	}
+
+
+}
 let z = 0;
 let v = 0;
 
@@ -749,7 +762,7 @@ var land = {
 	{
 		for(var mapY = minY; mapY < maxY; mapY++)
 		{
-			var grassValue = (world1.grass[world1.worldType][ mapY*world1.cols + mapX ]);
+			var grassValue = (world1.grass[worldTile][ mapY*world1.cols + mapX ]);
 			var grassX = mapX * scaledSizeX - camera.x;
 			var grassY = mapY * scaledSizeY - camera.y;
 			if(grassValue == undefined){
@@ -795,7 +808,7 @@ var land = {
 		{
 			for(var mapY = minY; mapY < maxY; mapY++)
 			{
-				var roadValue = (world1.roads[world1.worldType][ mapY*world1.cols + mapX ]);
+				var roadValue = (world1.roads[worldTile][ mapY*world1.cols + mapX ]);
 				var roadX = mapX * scaledSizeX - camera.x;
 				var roadY = mapY * scaledSizeY - camera.y;
 				c.drawImage(roadTx, roadValue * world1.tsize, 0, world1.tsize, world1.tsize, roadX, roadY, scaledSizeX, scaledSizeY);
@@ -833,7 +846,7 @@ var land = {
 	{
 		for(var mapY = minY; mapY < maxY; mapY++)
 		{
-			var buildVal = (world1.buildings[world1.worldType][ mapY*world1.cols + mapX ]);
+			var buildVal = (world1.buildings[worldTile][ mapY*world1.cols + mapX ]);
 			var buildX = mapX * scaledSizeX - camera.x;
 			var buildY = mapY * scaledSizeY - camera.y;
 
@@ -872,10 +885,7 @@ var land = {
 		
 	}
 }
-var cTop;
-var cBottom;
-var cRight;
-var cLeft;
+
 var npc = {
 	//rNumberLength: 3,
 	//rRandomizedNumber: parseInt(Math.random()*this.rNumberLength),
@@ -918,6 +928,7 @@ function loop()
 	cRight = player.x;
 	cLeft = parseInt(player.x + player.pWidth);
 
+	mapChangeControll(worldTile);
 
 	if(tilesPerScreenX <= 2 || tilesPerScreenY <= 2)
 	{
@@ -932,13 +943,13 @@ function loop()
 	if(overworld && !interior)
 	{
 
-	land.drawGrass(0);
-	land.drawRoads(0);
+	land.drawGrass(worldTile);
+	land.drawRoads(worldTile);
 	npc.random(500, 500)
 	npc.random(700, 500)
 	land.tree(100, 200, "oak");
 	c.drawImage(playerTx, player.x, player.y, player.pWidth, player.pHeight);
-	land.drawBuild(0);
+	land.drawBuild(worldTile);
 
 	
 
