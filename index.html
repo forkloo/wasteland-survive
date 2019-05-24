@@ -15,38 +15,69 @@
 			text-align: center;
 			float: left;
 		}
-		canvas {
+		.main{
 			position: absolute;
 			margin: auto;
 			top: 0;
 			right: 0;
 			bottom: 0;
 			left: 0;
+		}
+		canvas {
+			float: left;
 			border-style:dashed;
 			color: #323232;
 			background-image: url("img/bckgrnd.png");
 		}
 		body{
-			
 			background-color: #212121;
 			margin:0px;
 		}
-	
+		.itemContainer{
+			float: left;
+			width: 64px;
+			height: 720px;
+			border-style:dashed;
+			color: #323232;
+			background-image: url("img/bckgrnd.png");
+		}
+		button{
+			width: 64px;
+			height: 64px;
+		}
+	#gameInfo{
+		width:720px;
+		height: 256px;
+		color: white;
+		border-style:dashed;
+	}
 	</style>
 	<meta charset="utf-8"/>
 </head>
 <body>
-
-
+<div class = "main">
+<div class = "itemContainer">
+	<button id="road" onclick=objects.kitchen()>Kuchnia</button>
+	<button id="road" onclick=objects.armory()>Zbrojownia</button>
+	<button id="road" onclick=objects.workshop()>Warsztat</button>
+	<hr></hr>
+	<button id="road" onclick=objects.well()>Studnia</button>
+	<button id="road" onclick=objects.generator()>Generator</button>
+	<hr></hr>
+	<button id="road" onclick=objects.bedrooms()>Sypialnie</button>
+	<button id="road" onclick=objects.baths()>Łaźnia</button>
+	<button id="road" onclick=objects.diningRoom()>Jadalnia</button>
+</div>
 
 <canvas id='kanwa'></canvas>
-
 <footer>Game created by: Forkloo</footer>
+<div id="gameInfo">
+	
+</div>
 
+</div>
 
-
-<script src="renderer.js"></script>
-<script src="charSpawn.mjs"></script>
+<script src="main.js"></script>
 
 </body>
 </html>
