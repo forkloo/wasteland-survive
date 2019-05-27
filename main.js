@@ -9,11 +9,14 @@ var scaledSize = 64; //wielkość tekstur x i y
 var scrollZone = 60;
 
 var cursorX, cursorY, overlayMouseX, overlayMouseY;
+let objectSizeX = 1; let objectSizeY = 1;
 
 var cursor = true;
 var scrolling = false;
 var pause = false; let start = true;
 
+let kitchAmount=0; let armAmount=0; let workAmount=0; let wellAmount=0; let genAmount=0; let bedAmount=0; let bathAmount=0; let dinAmount=0;
+let pop=0;
 const Camera = function(x, y, w, h)
 {
 	this.x = x; this.y = y;
@@ -92,10 +95,10 @@ var world1 = {
 	,
 	[]],
 
-	middleLayer: [ 
+	resources: [ 
 		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
 		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , 1, 1, , , ,
 		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
 		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
 		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
@@ -226,10 +229,6 @@ var camera = new Camera(0, 0, width, height);
 
 var grassTx = new Image();
 var treeTx = new Image();
-
-
-let objectSizeX = 1; let objectSizeY = 1;
-
 
 
 function drawLand(worldTile)
@@ -388,6 +387,8 @@ function getKeyUp(e)
 
 }
 
+
+
 var enemyFPS = 0;
 function enemySpawner(){
 
@@ -431,6 +432,7 @@ let objects = {
 			}
 			iy = 0;
 			start = false;
+			pop = 10;
 			c.canvas.removeEventListener("mousedown", draw,false)
 			return;
 		}
@@ -449,6 +451,7 @@ let objects = {
 			}
 			iy = 0;
 			pause = false;
+			kitchAmount++;
 			c.canvas.removeEventListener("mousedown", draw,false)
 			return;
 		}
@@ -468,6 +471,7 @@ let objects = {
 			}
 			iy = 0;
 			pause = false;
+			armAmount++;
 			c.canvas.removeEventListener("mousedown", draw,false)
 			return;
 		}
@@ -487,6 +491,7 @@ let objects = {
 			}
 			iy = 0;
 			pause = false;
+			workAmount++;
 			c.canvas.removeEventListener("mousedown", draw,false)
 			return;
 		}
@@ -506,6 +511,7 @@ let objects = {
 			}
 			iy = 0;
 			pause = false;
+			wellAmount++;
 			c.canvas.removeEventListener("mousedown", draw,false)
 			return;
 		}
@@ -525,6 +531,7 @@ let objects = {
 			}
 			iy = 0;
 			pause = false;
+			genAmount++;
 			c.canvas.removeEventListener("mousedown", draw,false)
 			return;
 		}
@@ -544,6 +551,7 @@ let objects = {
 			}
 			iy = 0;
 			pause = false;
+			bedAmount++;
 			c.canvas.removeEventListener("mousedown", draw,false)
 			return;
 		}
@@ -563,6 +571,7 @@ let objects = {
 			}
 			iy = 0;
 			pause = false;
+			bathAmount++;
 			c.canvas.removeEventListener("mousedown", draw,false)
 			return;
 		}
@@ -582,6 +591,7 @@ let objects = {
 			}
 			iy = 0;
 			pause = false;
+			dinAmount++;
 			c.canvas.removeEventListener("mousedown", draw,false)
 			return;
 		}
@@ -704,8 +714,22 @@ function loop()
 		}
 	}
 
-window.requestAnimationFrame(loop);
 }
 
+function init(){
 
-window.addEventListener("load", function(){ window.setTimeout(loop, 500);});
+	document.getElementById("gameInfo").innerHTML = 
+	"Kuchnie:" + kitchAmount +"<br>"+
+	"Zbrojownie:" + armAmount +"<br>"+
+	"Warsztaty:" + workAmount +"<br>"+
+	"Studnie:" + wellAmount +"<br>"+
+	"Generatory:" + genAmount +"<br>"+
+	"Sypialnie:" + bedAmount +"<br>"+
+	"Łaźnie:" + bathAmount +"<br>"+
+	"Jadalnie:" + dinAmount +"<br>"+
+	"Populacja:" + pop +"<br>";
+	loop()
+	window.requestAnimationFrame(init);
+}
+
+window.addEventListener("load", init);
