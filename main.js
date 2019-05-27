@@ -17,6 +17,7 @@ var pause = false; let start = true;
 
 let kitchAmount=0; let armAmount=0; let workAmount=0; let wellAmount=0; let genAmount=0; let bedAmount=0; let bathAmount=0; let dinAmount=0;
 let pop=0;
+
 const Camera = function(x, y, w, h)
 {
 	this.x = x; this.y = y;
@@ -348,52 +349,17 @@ function drawBuildings(worldTile)
 	}
 }
 
-let up = false; let down = false; let right = false; let left = false;
+let mode = "gm";
 
-function getKeyDown(e)
-{
-	if(e.keyCode == 87){
-		up = true;
-		down = false;
-		right = false;
-		left = false;
-	}
-	else if(e.keyCode == 83){
-		down = true;
-		up = false;
-		right = false;
-		left = false;
-	}
-	else if(e.keyCode == 65){
-		left = true;
-		up = false;
-		down = false;
-		right = false;
-	}
-	else if(e.keyCode == 68){
-		right = true;
-		up = false;
-		down = false;
-		left = false;
+let expl = 0;
+let createNpc = {
+	explorer : function(){
+		expl += 1;
+		return;
 	}
 }
 
-function getKeyUp(e)
-{
-	up = false;
-	down = false;
-	right = false;
-	left = false;
-
-}
-
-
-
-var enemyFPS = 0;
-function enemySpawner(){
-
-}
-
+scrolling
 function getMouse(e) 
 {
 	middleX = width/2;
@@ -406,7 +372,7 @@ function getMouse(e)
 	overlayMouseY = e.clientY - c.canvas.offsetTop;
 }
 
-let editTile;
+let editTile; let cEditTile; let buildInfo = document.getElementById("build"); let items = document.getElementById("itemContainer");
 function editor(e)
 {
 	editX = (tileX * scaledSize) - camera.x;
@@ -416,6 +382,40 @@ function editor(e)
 	c.stroke()
 
 	editTile = (tileY * world1.cols + tileX);
+	cEditTile = world1.build[editTile];
+	c.canvas.addEventListener("mousedown", function(){
+	if(mode == "gm"){
+		console.log(cEditTile)
+		if(cEditTile == 2){
+			pause = true;
+
+			let explorer = document.createElement("button");
+			let explorerOut = document.createElement("button");
+
+			let farmer = document.createElement("button");
+			let farmerOut = document.createElement("button");
+
+			explorer.innerHTML = "Poszukiwacz";
+			explorerOut.innerHTML = "Odwołaj jednego";
+
+			farmer.innerHTML = "Farmer";
+			farmerOut.innerHTML = "Odwołaj jednego";
+
+			explorer.onclick = createNpc.explorer;
+			
+			buildInfo.innerHTML = "Baza<hr></hr>Rekrutuj: <br><br>";
+
+			buildInfo.appendChild(explorer);
+			buildInfo.appendChild(explorerOut);
+			buildInfo.appendChild(farmer);
+			buildInfo.appendChild(farmerOut);
+		}
+		else{
+			pause = false;
+			buildInfo.innerHTML = "";
+		}
+	}
+	}, false);
 }
 
 //let univBuildCheckX = (!isNaN(world.build[editTile-1]) || !isNaN(world.build[editTile+objectSizeX]) || !isNaN(world.build[(editTile+world1.cols)-1]) || !isNaN(world.build[(editTile+world1.cols)+objectSizeX]))
@@ -440,8 +440,9 @@ let objects = {
 		return;
 	},
 	kitchen: function(){
+		if(mode == "gm") {return;}
 		console.log("kitchen")
-		pause = true;
+		
 		objectSizeX = 4; objectSizeY = 3;
 		let ix = 0; let iy = 0;
 		function draw(){
@@ -450,7 +451,7 @@ let objects = {
 				ix = 0; iy++; 
 			}
 			iy = 0;
-			pause = false;
+			
 			kitchAmount++;
 			c.canvas.removeEventListener("mousedown", draw,false)
 			return;
@@ -460,8 +461,9 @@ let objects = {
 		return;
 	},
 	armory: function(){
+		if(mode == "gm") {return;}
 		console.log("armory")
-		pause = true;
+		
 		objectSizeX = 3; objectSizeY = 3;
 		let ix = 0; let iy = 0;
 		function draw(){
@@ -470,7 +472,7 @@ let objects = {
 				ix = 0; iy++; 
 			}
 			iy = 0;
-			pause = false;
+			
 			armAmount++;
 			c.canvas.removeEventListener("mousedown", draw,false)
 			return;
@@ -480,8 +482,9 @@ let objects = {
 		return;
 	},
 	workshop: function(){
+		if(mode == "gm") {return;}
 		console.log("workshop")
-		pause = true;
+		
 		objectSizeX = 3; objectSizeY = 4;
 		let ix = 0; let iy = 0;
 		function draw(){
@@ -490,7 +493,7 @@ let objects = {
 				ix = 0; iy++; 
 			}
 			iy = 0;
-			pause = false;
+			
 			workAmount++;
 			c.canvas.removeEventListener("mousedown", draw,false)
 			return;
@@ -500,8 +503,9 @@ let objects = {
 		return;
 	},
 	well: function(){
+		if(mode == "gm") {return;}
 		console.log("well")
-		pause = true;
+		
 		objectSizeX = 2; objectSizeY = 2;
 		let ix = 0; let iy = 0;
 		function draw(){
@@ -510,7 +514,7 @@ let objects = {
 				ix = 0; iy++; 
 			}
 			iy = 0;
-			pause = false;
+			
 			wellAmount++;
 			c.canvas.removeEventListener("mousedown", draw,false)
 			return;
@@ -520,8 +524,9 @@ let objects = {
 		return;
 	},
 	generator: function(){
+		if(mode == "gm") {return;}
 		console.log("generator")
-		pause = true;
+		
 		objectSizeX = 1; objectSizeY = 1;
 		let ix = 0; let iy = 0;
 		function draw(){
@@ -530,7 +535,7 @@ let objects = {
 				ix = 0; iy++; 
 			}
 			iy = 0;
-			pause = false;
+			
 			genAmount++;
 			c.canvas.removeEventListener("mousedown", draw,false)
 			return;
@@ -540,8 +545,9 @@ let objects = {
 		return;
 	},
 	bedrooms: function(){
+		if(mode == "gm") {return;}
 		console.log("bedrooms")
-		pause = true;
+		
 		objectSizeX = 5; objectSizeY = 4;
 		let ix = 0; let iy = 0;
 		function draw(){
@@ -550,7 +556,7 @@ let objects = {
 				ix = 0; iy++; 
 			}
 			iy = 0;
-			pause = false;
+			
 			bedAmount++;
 			c.canvas.removeEventListener("mousedown", draw,false)
 			return;
@@ -560,8 +566,9 @@ let objects = {
 		return;
 	},
 	baths: function(){
+		if(mode == "gm") {return;}
 		console.log("baths")
-		pause = true;
+		
 		objectSizeX = 6; objectSizeY = 3;
 		let ix = 0; let iy = 0;
 		function draw(){
@@ -570,7 +577,7 @@ let objects = {
 				ix = 0; iy++; 
 			}
 			iy = 0;
-			pause = false;
+			
 			bathAmount++;
 			c.canvas.removeEventListener("mousedown", draw,false)
 			return;
@@ -580,17 +587,28 @@ let objects = {
 		return;
 	},
 	diningRoom: function(){
+		if(mode == "gm") {return;}
 		console.log("diningRoom")
-		pause = true;
+		
 		objectSizeX = 6; objectSizeY = 4;
 		let ix = 0; let iy = 0;
 		function draw(){
 			while(iy < objectSizeY){
-				while(ix<objectSizeX){ world1.build[editTile+(world1.cols*iy)+ix] = 10; ix++};
-				ix = 0; iy++; 
+				while(ix<objectSizeX){ 
+					
+					if(world1.build[editTile+(world1.cols*(objectSizeY-1)+(objectSizeX - 1))]){
+						return;
+					}
+					else{
+						world1.build[editTile+(world1.cols*iy)+ix] = 10; 
+						ix++
+					}
+				}
+				ix = 0;iy++; 
 			}
+			
 			iy = 0;
-			pause = false;
+			
 			dinAmount++;
 			c.canvas.removeEventListener("mousedown", draw,false)
 			return;
@@ -601,6 +619,72 @@ let objects = {
 	},
 }
 
+function editMode()
+{
+	if(mode == "edit"){
+		pause = true;
+	let kuch = document.createElement("button");
+	let warsz = document.createElement("button");
+
+	let stud = document.createElement("button");
+	let gen = document.createElement("button");
+	
+	let syp = document.createElement("button");
+	let lazn = document.createElement("button");
+	let jad = document.createElement("button");
+
+	kuch.innerHTML = "Kuchnia"
+	warsz.innerHTML = "Warsztat"
+
+	stud.innerHTML = "Studnia"
+	gen.innerHTML = "Generator"
+
+	syp.innerHTML = "Sypialnia"
+	lazn.innerHTML = "Łaźnie"
+	jad.innerHTML = "Jadalnia"
+
+	kuch.onclick = objects.kitchen
+	warsz.onclick = objects.workshop
+
+	stud.onclick = objects.well
+	gen.onclick = objects.generator
+
+	syp.onclick = objects.bedrooms
+	lazn.onclick = objects.baths
+	jad.onclick = objects.diningRoom
+
+	items.appendChild(kuch);
+	items.appendChild(warsz)
+
+	items.appendChild(stud)
+	items.appendChild(gen)
+
+	items.appendChild(syp)
+	items.appendChild(lazn)
+	items.appendChild(jad)
+}
+if(mode == "gm")
+{
+	pause = false;
+	objectSizeX = 1; objectSizeY = 1;
+	items.innerHTML = ""
+}
+}
+
+function getKeyDown(e)
+{
+   if (e.keyCode == 32 && e.target == document.body) {
+	   e.preventDefault();
+	 }
+   if(e.keyCode == 32 && mode == "edit"){
+	   mode = "gm";
+	   editMode()
+   }
+   else if(e.keyCode == 32 && mode == "gm"){
+	   mode = "edit";
+	   editMode()
+   }
+}
 //PĘTLA GRY
 var offSetX, offSetY, tileX, tileY;
 
@@ -624,6 +708,7 @@ function loop()
 	drawBuildings(world1.wtile)
 	
 
+
 	if(!pause && !start)
 	{
 		drawLand(world1.wtile)
@@ -632,58 +717,55 @@ function loop()
 		editor();
 
 		document.addEventListener('keydown', getKeyDown, false);
-		document.addEventListener('keyup', getKeyUp, false);
+
 		window.addEventListener("mousemove", getMouse, false);
-		scrolling = false;
-
-		if(right){
-			camera.x += 5;
-		}
-		if(left){
-			camera.x -= 5;
-		}
-		if(up){
-			camera.y -= 5;
-		}
-		if(down){
-			camera.y += 5;
-		}
-
-		// if(overlayMouseX > (width - 100))
-		// {
-		// 	camera.x += camera.velocity;
-		// 	scrolling = true;
-		// }
-		// if(overlayMouseY < 100 && camera.y > 0)
-		// {
-		// 	camera.y -= camera.velocity;
-		// 	scrolling = true;
-		// }
-		// if(overlayMouseY > (height - 100))
-		// {
-		// 	camera.y += camera.velocity;
-		// 	scrolling = true;
-		// }
-		// if(overlayMouseX < 100 && camera.x > 0)
-		// {
-		// 	camera.x -= camera.velocity;
-		// 	scrolling = true;
-		// }
+	
+		if(overlayMouseX > (width - 100))
+			{
+			camera.x += camera.velocity;
+			}
+		if(overlayMouseY < 100 && camera.y > 0)
+			{
+			camera.y -= camera.velocity;
+			}
+		if(overlayMouseY > (height - 100))
+			{
+			camera.y += camera.velocity;
+			}
+		if(overlayMouseX < 100 && camera.x > 0)
+			{
+			camera.x -= camera.velocity;
+			}
 
 		
+		
+		
+		// if(right){
+		// 	camera.x += 5;
+		// }
+		// if(left){
+		// 	camera.x -= 5;
+		// }
+		// if(up){
+		// 	camera.y -= 5;
+		// }
+		// if(down){
+		// 	camera.y += 5;
+		// }
+
 	}
 	if(pause)
 	{
-		document.addEventListener('keydown', getKeyDown, false);
-		document.addEventListener('keyup', getKeyUp, false);
+		//document.addEventListener('keydown', getKeyDown, false);
+		//document.addEventListener('keyup', getKeyUp, false);
 		window.addEventListener("mousemove", getMouse, false);
 		drawLand(world1.wtile)
 		drawBuildings(world1.wtile)
 		editor()
 	}
 	if(start){
-		document.addEventListener('keydown', getKeyDown, false);
-		document.addEventListener('keyup', getKeyUp, false);
+		//document.addEventListener('keydown', getKeyDown, false);
+		//document.addEventListener('keyup', getKeyUp, false);
 		window.addEventListener("mousemove", getMouse, false);
 		drawLand(world1.wtile)
 		drawBuildings(world1.wtile)
@@ -715,19 +797,10 @@ function loop()
 	}
 
 }
-
+let gameInfo= document.getElementById("gameInfo")
 function init(){
 
-	document.getElementById("gameInfo").innerHTML = 
-	"Kuchnie:" + kitchAmount +"<br>"+
-	"Zbrojownie:" + armAmount +"<br>"+
-	"Warsztaty:" + workAmount +"<br>"+
-	"Studnie:" + wellAmount +"<br>"+
-	"Generatory:" + genAmount +"<br>"+
-	"Sypialnie:" + bedAmount +"<br>"+
-	"Łaźnie:" + bathAmount +"<br>"+
-	"Jadalnie:" + dinAmount +"<br>"+
-	"Populacja:" + pop +"<br>";
+	gameInfo.innerHTML = "Populacja: "+"*"+"/"+pop+"   |   "+"Tryb: "+mode+"<hr></hr>Statystyki profesji: <br>"+"Poszukiwacze: "+expl+"<br>"+"Farmerzy";
 	loop()
 	window.requestAnimationFrame(init);
 }

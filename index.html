@@ -33,7 +33,7 @@
 			background-color: #212121;
 			margin:0px;
 		}
-		.itemContainer{
+		#itemContainer{
 			float: left;
 			width: 64px;
 			height: 720px;
@@ -45,39 +45,43 @@
 			width: 64px;
 			height: 64px;
 		}
-	#gameInfo{
-		width:720px;
-		height: 256px;
+	#build{
+		width: 300px;
+		height: 360px;
 		color: white;
-		border-style:dashed;
+		float: right;
+	}
+	#build button{
+		width: 128px;
+		margin-right: 15px;
+		margin-top: 5px;
+	}
+	#gameInfo{
+		width: 300px;
+		height: 360px;
+		color: white;
+		float: right;
 	}
 	</style>
 	<meta charset="utf-8"/>
 </head>
 <body>
 <div class = "main">
-<div class = "itemContainer">
-	<button id="road" onclick=objects.kitchen()>Kuchnia</button>
-	<button id="road" onclick=objects.armory()>Zbrojownia</button>
-	<button id="road" onclick=objects.workshop()>Warsztat</button>
-	<hr></hr>
-	<button id="road" onclick=objects.well()>Studnia</button>
-	<button id="road" onclick=objects.generator()>Generator</button>
-	<hr></hr>
-	<button id="road" onclick=objects.bedrooms()>Sypialnie</button>
-	<button id="road" onclick=objects.baths()>Łaźnia</button>
-	<button id="road" onclick=objects.diningRoom()>Jadalnia</button>
+<div id = "itemContainer">
+	
 </div>
 
 <canvas id='kanwa'></canvas>
-<footer>Game created by: Forkloo</footer>
 <div id="gameInfo">
+	
+</div>
+<div id="build">
 	
 </div>
 
 </div>
 
 <script src="main.js"></script>
-
+<footer>Game created by: Forkloo</footer>
 </body>
 </html>
