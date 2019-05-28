@@ -13,10 +13,13 @@ let objectSizeX = 1; let objectSizeY = 1;
 
 var cursor = true;
 var scrolling = false;
-var pause = false; let start = true;
+var pause = false; let start = true; let mode = "gm";
 
-let kitchAmount=0; let armAmount=0; let workAmount=0; let wellAmount=0; let genAmount=0; let bedAmount=0; let bathAmount=0; let dinAmount=0;
-let pop=0;
+let kitchAmount=0; let armAmount=0; let workAmount=0; let wellAmount=0; let genAmount=0; let bedAmount=0; let bathAmount=0; let dinAmount=0; let farmAmount = 0;
+let nExpl = 0; let nFarm = 0; let nColl = 0;
+let fFood = 1*(farmAmount*nFarm);
+let maxPop = 0; let currPop = 0;
+let account = 100;
 
 const Camera = function(x, y, w, h)
 {
@@ -27,72 +30,48 @@ const Camera = function(x, y, w, h)
 
 var world1 = {
 	tsize: 128,
-	cols: 60,
-	rows: 60,
+	cols: 35,
+	rows: 35,
 	wtile: 0,
 	
 	grass : [
-		   [ 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 0, 0, 0, 0, 1, 1, 1, 7, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 4, 1, 0, 0, 0, 1, 1, 4, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 2, 1, 2, 0, 1, 4, 3, 1, 0, 1, 1, 1, 1, 1 ,0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 4, 3, 6, 3, 5, 1, 2, 6, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 0, 0, 0, 0, 1, 1, 1, 7, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 4, 1, 0, 0, 0, 1, 1, 4, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 2, 1, 2, 0, 1, 4, 3, 1, 0, 1, 1, 1, 1, 1 ,0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 4, 3, 6, 3, 5, 1, 2, 6, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 0, 0, 0, 0, 1, 1, 1, 7, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 4, 1, 0, 0, 0, 1, 1, 4, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 2, 1, 2, 0, 1, 4, 3, 1, 0, 1, 1, 1, 1, 1 ,0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 4, 3, 6, 3, 5, 1, 2, 6, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 0, 0, 0, 0, 1, 1, 1, 7, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 4, 1, 0, 0, 0, 1, 1, 4, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 2, 1, 2, 0, 1, 4, 3, 1, 0, 1, 1, 1, 1, 1 ,0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 4, 3, 6, 3, 5, 1, 2, 6, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 0, 0, 0, 0, 1, 1, 1, 7, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 4, 1, 0, 0, 0, 1, 1, 4, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 2, 1, 2, 0, 1, 4, 3, 1, 0, 1, 1, 1, 1, 1 ,0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 4, 3, 6, 3, 5, 1, 2, 6, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 0, 0, 0, 0, 1, 1, 1, 7, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 4, 1, 0, 0, 0, 1, 1, 4, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 2, 1, 2, 0, 1, 4, 3, 1, 0, 1, 1, 1, 1, 1 ,0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 4, 3, 6, 3, 5, 1, 2, 6, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 0, 0, 0, 0, 1, 1, 1, 7, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 4, 1, 0, 0, 0, 1, 1, 4, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 2, 1, 2, 0, 1, 4, 3, 1, 0, 1, 1, 1, 1, 1 ,0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 4, 3, 6, 3, 5, 1, 2, 6, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 0, 0, 0, 0, 1, 1, 1, 7, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 4, 1, 0, 0, 0, 1, 1, 4, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 2, 1, 2, 0, 1, 4, 3, 1, 0, 1, 1, 1, 1, 1 ,0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 4, 3, 6, 3, 5, 1, 2, 6, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 0, 0, 0, 0, 1, 1, 1, 7, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 4, 1, 0, 0, 0, 1, 1, 4, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 2, 1, 2, 0, 1, 4, 3, 1, 0, 1, 1, 1, 1, 1 ,0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 4, 3, 6, 3, 5, 1, 2, 6, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 0, 0, 0, 0, 1, 1, 1, 7, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 4, 1, 0, 0, 0, 1, 1, 4, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 2, 1, 2, 0, 1, 4, 3, 1, 0, 1, 1, 1, 1, 1 ,0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 4, 3, 6, 3, 5, 1, 2, 6, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 0, 0, 0, 0, 1, 1, 1, 7, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 4, 1, 0, 0, 0, 1, 1, 4, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 2, 1, 2, 0, 1, 4, 3, 1, 0, 1, 1, 1, 1, 1 ,0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 4, 3, 6, 3, 5, 1, 2, 6, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 0, 0, 0, 0, 1, 1, 1, 7, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 4, 1, 0, 0, 0, 1, 1, 4, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 2, 1, 2, 0, 1, 4, 3, 1, 0, 1, 1, 1, 1, 1 ,0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-			 0, 0, 4, 3, 6, 3, 5, 1, 2, 6, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 4, 0, 3, 0, 0, 2, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-		]
+		   [  
+			5,1,1,1,1,1,0, , ,7,7,7, , , , , , , ,2,2,2,2,2, , , , , , , ,2,2,2,2,
+			0,5,1,1,1,1,0, , ,0,7,7, , , , , , , , ,2,2,2,2, , , , , , , , ,2,2,2,
+			0,0,5,5,1,1,0, ,0,0,0,7, , , , , , , , , ,2,2,2,2, , , , , , , , ,2,2,
+			0,0,0,0,5,5,0,0,4,0, , , , ,5, , , , , , , , ,2,2,2, , , , , , , , , ,
+			0,0, ,4,0, , , ,0,0, , , , ,6, , , , , , , , , , , , , , , , , , , , ,
+			0, ,0, ,3,3, , , , , ,0, , , , , , , , , , , , , , , , , , , , , , , ,
+			3,3,0,0,3,3, , , ,0, ,4,0, , , , , , , , , , , , , , , , , , , , , , ,
+			3,3,3,0,3,3,3, , , , ,0,0, , , ,6, , , , , , , , , , , , , , , , , , ,
+			3,3,3,3,3,3, , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , ,0, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			 ]
 	,
 	[]],
 
@@ -231,6 +210,29 @@ var camera = new Camera(0, 0, width, height);
 var grassTx = new Image();
 var treeTx = new Image();
 
+let wTime = 0; let min = "00"; let hours = 6;
+
+let time ={
+	
+	wClock: function(){
+	
+		wTime+=2;
+	if(min > 59){
+		wTime = 0;
+		hours++;
+	}
+	if(min < 10){
+		min = "0"+Math.round(wTime/100);
+	}
+	
+	else{
+		min = Math.round(wTime/100);
+	}
+	}
+	
+
+	
+}
 
 function drawLand(worldTile)
 {
@@ -266,7 +268,10 @@ function drawLand(worldTile)
 			var grassValue = (world1.grass[world1.wtile][ mapY*world1.cols + mapX ]);
 			var grassX = mapX * scaledSize - camera.x;
 			var grassY = mapY * scaledSize - camera.y;
-			
+			if(grassValue == undefined){
+				c.fillStyle = "#fff176";
+				c.fillRect(grassX, grassY, scaledSize, scaledSize);
+			}
 			c.drawImage(grassTx, grassValue * world1.tsize, 0, world1.tsize, world1.tsize, grassX, grassY, scaledSize, scaledSize);
 		}
 	}
@@ -349,17 +354,75 @@ function drawBuildings(worldTile)
 	}
 }
 
-let mode = "gm";
 
-let expl = 0;
+
 let createNpc = {
 	explorer : function(){
-		expl += 1;
+		if(currPop > 0){
+			nExpl += 1;
+			currPop -= 1;
+			return;
+		}
+		
+	},
+	explorerOut : function(){
+		if(nExpl > 0){
+			nExpl -= 1;
+			currPop += 1;
+			return;
+		}
+	},
+	farmer : function(){
+		if(currPop > 0){
+		nFarm += 1;
+		currPop -= 1;
 		return;
-	}
+		}
+		
+	},
+	farmerOut : function(){
+		if(nFarm > 0){
+			nFarm -= 1;
+			currPop += 1;
+			return;
+		}
+		
+	},
+	collector : function(){
+		if(currPop > 0)
+		{
+		nColl += 1;
+		currPop -= 1;
+		return;
+		}
+	},
+	collectorOut : function(){
+		if(nColl > 0){
+			nColl -= 1;
+			currPop += 1;
+			return;
+		}
+		
+	},
 }
 
-scrolling
+let cCommands = {
+	cactus: function(){
+
+	},
+	water: function(){
+
+	},
+	food: function(){
+
+	},
+	blueprints: function(){
+
+	}
+
+
+}
+
 function getMouse(e) 
 {
 	middleX = width/2;
@@ -385,30 +448,101 @@ function editor(e)
 	cEditTile = world1.build[editTile];
 	c.canvas.addEventListener("mousedown", function(){
 	if(mode == "gm"){
-		console.log(cEditTile)
 		if(cEditTile == 2){
-			pause = true;
-
-			let explorer = document.createElement("button");
-			let explorerOut = document.createElement("button");
-
-			let farmer = document.createElement("button");
-			let farmerOut = document.createElement("button");
-
-			explorer.innerHTML = "Poszukiwacz";
-			explorerOut.innerHTML = "Odwołaj jednego";
-
-			farmer.innerHTML = "Farmer";
-			farmerOut.innerHTML = "Odwołaj jednego";
-
-			explorer.onclick = createNpc.explorer;
 			
-			buildInfo.innerHTML = "Baza<hr></hr>Rekrutuj: <br><br>";
+			pause = true;
+			function manage(){
+				let explorer = document.createElement("button");
+				let collector = document.createElement("button");
+				let mainB = document.createElement("button");
+	
+				explorer.innerHTML = "Wyślij Wędrowca<br>(Powróci rano)";
+				collector.innerHTML = "Wydaj zadanie Zbieraczowi<br>(Powróci rano)";
+				mainB.innerHTML = "Powrót<br>do<br>Rekrutacji"
+	
+				//explorer.onclick = manageNpc.explorer;
+				collector.onclick = collectorMenu;
+				mainB.onclick = main;
+				
+				buildInfo.innerHTML = "Baza<hr></hr>Zarządzaj: <br><br>";
+	
+				buildInfo.appendChild(explorer);
+				buildInfo.appendChild(collector);
+				buildInfo.appendChild(mainB);
+				}
+			function main(){
+				let explorer = document.createElement("button");
+				let explorerOut = document.createElement("button");
+	
+				let farmer = document.createElement("button");
+				let farmerOut = document.createElement("button");
+	
+				let collector = document.createElement("button");
+				let collectorOut = document.createElement("button");
+				
+				let manageB = document.createElement("button");
 
-			buildInfo.appendChild(explorer);
-			buildInfo.appendChild(explorerOut);
-			buildInfo.appendChild(farmer);
-			buildInfo.appendChild(farmerOut);
+				explorer.innerHTML = "Poszukiwacz";
+				explorerOut.innerHTML = "Odwołaj jednego";
+	
+				farmer.innerHTML = "Farmer";
+				farmerOut.innerHTML = "Odwołaj jednego";
+	
+				collector.innerHTML = "Zbieracz";
+				collectorOut.innerHTML = "Odwołaj jednego";
+	
+				manageB.innerHTML = "Zarządzaj";
+
+				explorer.onclick = createNpc.explorer;
+				farmer.onclick = createNpc.farmer;
+				collector.onclick = createNpc.collector;
+	
+				explorerOut.onclick = createNpc.explorerOut;
+				farmerOut.onclick = createNpc.farmerOut;
+				collectorOut.onclick = createNpc.collectorOut;
+
+				manageB.onclick = manage;
+				
+				buildInfo.innerHTML = "Baza<hr></hr>Rekrutuj: <br><br>";
+	
+				buildInfo.appendChild(explorer);
+				buildInfo.appendChild(explorerOut);
+				buildInfo.appendChild(farmer);
+				buildInfo.appendChild(farmerOut);
+				buildInfo.appendChild(collector);
+				buildInfo.appendChild(collectorOut);
+				buildInfo.appendChild(manageB);
+				}
+			
+			function collectorMenu(){
+				let cactusB = document.createElement("button");
+				let waterB = document.createElement("button");
+				let foodB = document.createElement("button");
+				let blueprintsB = document.createElement("button");
+				let cancel = document.createElement("button");
+				
+				cactusB.innerHTML = "Szukaj<br>kaktusów";
+				waterB.innerHTML = "Szukaj<br>wody";
+				foodB.innerHTML = "Szukaj<br>pożywienia";
+				blueprintsB.innerHTML = "Szukaj<br>planów";
+				cancel.innerHTML = "Anuluj";
+
+				cactusB.onclick = cCommands.cactus;
+				waterB.onclick = cCommands.water;
+				foodB.onclick = cCommands.food;
+				blueprintsB.onclick = cCommands.blueprints;
+				cancel.onclick = manage;
+			
+				buildInfo.innerHTML = "Baza<hr></hr>Wydaj dwa priorytety: <br><br>";
+	
+				buildInfo.appendChild(cactusB);
+				buildInfo.appendChild(waterB);
+				buildInfo.appendChild(foodB);
+				buildInfo.appendChild(blueprintsB);
+				buildInfo.appendChild(cancel);
+			}
+			
+			main()
 		}
 		else{
 			pause = false;
@@ -422,7 +556,6 @@ function editor(e)
 
 let objects = {
 	base: function(){
-		console.log("base")
 		objectSizeX = 6; objectSizeY = 4;
 		let ix = 0; let iy = 0;
 		function draw(){
@@ -432,7 +565,8 @@ let objects = {
 			}
 			iy = 0;
 			start = false;
-			pop = 10;
+			maxPop = 10;
+			currPop = maxPop;
 			c.canvas.removeEventListener("mousedown", draw,false)
 			return;
 		}
@@ -441,7 +575,8 @@ let objects = {
 	},
 	kitchen: function(){
 		if(mode == "gm") {return;}
-		console.log("kitchen")
+		if(mode == "edit"){
+		
 		
 		objectSizeX = 4; objectSizeY = 3;
 		let ix = 0; let iy = 0;
@@ -451,35 +586,13 @@ let objects = {
 				ix = 0; iy++; 
 			}
 			iy = 0;
-			
+			account -= 35;
 			kitchAmount++;
 			c.canvas.removeEventListener("mousedown", draw,false)
 			return;
 		}
 		c.canvas.addEventListener("mousedown", draw, false);
-		
-		return;
-	},
-	armory: function(){
-		if(mode == "gm") {return;}
-		console.log("armory")
-		
-		objectSizeX = 3; objectSizeY = 3;
-		let ix = 0; let iy = 0;
-		function draw(){
-			while(iy < objectSizeY){
-				while(ix<objectSizeX){ world1.build[editTile+(world1.cols*iy)+ix] = 4; ix++};
-				ix = 0; iy++; 
-			}
-			iy = 0;
-			
-			armAmount++;
-			c.canvas.removeEventListener("mousedown", draw,false)
-			return;
-		}
-		c.canvas.addEventListener("mousedown", draw, false);
-		
-		return;
+	}
 	},
 	workshop: function(){
 		if(mode == "gm") {return;}
@@ -493,7 +606,7 @@ let objects = {
 				ix = 0; iy++; 
 			}
 			iy = 0;
-			
+			account -= 100;
 			workAmount++;
 			c.canvas.removeEventListener("mousedown", draw,false)
 			return;
@@ -514,7 +627,7 @@ let objects = {
 				ix = 0; iy++; 
 			}
 			iy = 0;
-			
+			account -= 20;
 			wellAmount++;
 			c.canvas.removeEventListener("mousedown", draw,false)
 			return;
@@ -535,7 +648,7 @@ let objects = {
 				ix = 0; iy++; 
 			}
 			iy = 0;
-			
+			account -= 20;
 			genAmount++;
 			c.canvas.removeEventListener("mousedown", draw,false)
 			return;
@@ -556,7 +669,7 @@ let objects = {
 				ix = 0; iy++; 
 			}
 			iy = 0;
-			
+			account -= 35;
 			bedAmount++;
 			c.canvas.removeEventListener("mousedown", draw,false)
 			return;
@@ -577,7 +690,7 @@ let objects = {
 				ix = 0; iy++; 
 			}
 			iy = 0;
-			
+			account -= 25;
 			bathAmount++;
 			c.canvas.removeEventListener("mousedown", draw,false)
 			return;
@@ -608,7 +721,7 @@ let objects = {
 			}
 			
 			iy = 0;
-			
+			account -= 50;
 			dinAmount++;
 			c.canvas.removeEventListener("mousedown", draw,false)
 			return;
@@ -616,6 +729,29 @@ let objects = {
 		c.canvas.addEventListener("mousedown", draw, false);
 		
 		return;
+	},
+	farm: function(){
+		
+		objectSizeX = 1; objectSizeY = 1;
+		let ix = 0; let iy = 0;
+
+		function draw(){
+			if(mode == "gm"){
+				c.canvas.removeEventListener("mousedown", draw,false)
+				console.log("me")
+			}
+			else{
+			while(iy < objectSizeY){
+				while(ix<objectSizeX){ world1.build[editTile+(world1.cols*iy)+ix] = 7; ix++};
+				ix = 0; iy++; 
+			}
+			iy = 0;
+			account -= 5;
+			farmAmount++;
+			}
+		}
+		c.canvas.addEventListener("mousedown", draw, false);
+		return 0;
 	},
 }
 
@@ -625,6 +761,7 @@ function editMode()
 		pause = true;
 	let kuch = document.createElement("button");
 	let warsz = document.createElement("button");
+	let farm = document.createElement("button");
 
 	let stud = document.createElement("button");
 	let gen = document.createElement("button");
@@ -635,6 +772,7 @@ function editMode()
 
 	kuch.innerHTML = "Kuchnia"
 	warsz.innerHTML = "Warsztat"
+	farm.innerHTML = "Farma"
 
 	stud.innerHTML = "Studnia"
 	gen.innerHTML = "Generator"
@@ -645,6 +783,7 @@ function editMode()
 
 	kuch.onclick = objects.kitchen
 	warsz.onclick = objects.workshop
+	farm.onclick = objects.farm
 
 	stud.onclick = objects.well
 	gen.onclick = objects.generator
@@ -655,6 +794,7 @@ function editMode()
 
 	items.appendChild(kuch);
 	items.appendChild(warsz)
+	items.appendChild(farm);
 
 	items.appendChild(stud)
 	items.appendChild(gen)
@@ -685,8 +825,9 @@ function getKeyDown(e)
 	   editMode()
    }
 }
+
 //PĘTLA GRY
-var offSetX, offSetY, tileX, tileY;
+var tileX, tileY;
 
 function loop()
 {
@@ -711,6 +852,7 @@ function loop()
 
 	if(!pause && !start)
 	{
+		time.wClock();
 		drawLand(world1.wtile)
 		drawBuildings(world1.wtile)
 		objectSizeX = 1; objectSizeY = 1;
@@ -774,34 +916,52 @@ function loop()
 
 		window.addEventListener("mousemove", getMouse, false);
 		scrolling = false;
-		if(overlayMouseX > (width - 100) && camera.x < 280)
-		{
+		
+		if(overlayMouseX > (width - 100))
+			{
 			camera.x += camera.velocity;
-			scrolling = true;
-		}
+			}
 		if(overlayMouseY < 100 && camera.y > 0)
-		{
+			{
 			camera.y -= camera.velocity;
-			scrolling = true;
-		}
-		if(overlayMouseY > (height - 100) && camera.y < 555)
-		{
+			}
+		if(overlayMouseY > (height - 100))
+			{
 			camera.y += camera.velocity;
-			scrolling = true;
-		}
+			}
 		if(overlayMouseX < 100 && camera.x > 0)
-		{
+			{
 			camera.x -= camera.velocity;
-			scrolling = true;
-		}
+			}
 	}
 
 }
+
+
+let currfFood = 0;
+
 let gameInfo= document.getElementById("gameInfo")
 function init(){
-
-	gameInfo.innerHTML = "Populacja: "+"*"+"/"+pop+"   |   "+"Tryb: "+mode+"<hr></hr>Statystyki profesji: <br>"+"Poszukiwacze: "+expl+"<br>"+"Farmerzy";
+	
+	fFood = 1*(farmAmount*nFarm);
+	if(hours == 24 && min == 0){
+		currfFood += fFood;
+	}
+	
+	gameInfo.innerHTML = "Populacja: "+currPop+"/"+maxPop+"   |   "+"Tryb: "+mode+" Czas: "+hours+":"+min+
+	"<hr></hr>Statystyki profesji: <br>"+
+	"Poszukiwacze: "+nExpl+
+	"<br>"+"Farmerzy: "+nFarm+
+	"<br>"+"Zbieracze: "+nColl+"<hr></hr>"+
+	"Surowce<br></br>"+
+	"Surowe warzywa: "+currfFood+"<br>"+
+	"Posiłki: "+"fDish<br>"+
+	"Woda: "+"fWater<br>"+
+	"Prąd: "+"gElectr<br><br>"+
+	"Kamyki: "+account
+	;
 	loop()
+	
 	window.requestAnimationFrame(init);
 }
 
