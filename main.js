@@ -14,10 +14,11 @@ let objectSizeX = 1; let objectSizeY = 1;
 var cursor = true;
 var scrolling = false;
 var pause = false; let start = true; let mode = "gm";
+let wTimeSpeed = 2;
 
 let kitchAmount=0; let armAmount=0; let workAmount=0; let wellAmount=0; let genAmount=0; let bedAmount=0; let bathAmount=0; let dinAmount=0; let farmAmount = 0;
 let nExpl = 0; let nFarm = 0; let nColl = 0;
-let fFood = 1*(farmAmount*nFarm);
+let fFood = 1*(farmAmount*nFarm); let fDish = 0;
 let maxPop = 0; let currPop = 0;
 let account = 100;
 
@@ -210,13 +211,16 @@ var camera = new Camera(0, 0, width, height);
 var grassTx = new Image();
 var treeTx = new Image();
 
-let wTime = 0; let min = "00"; let hours = 6;
+let wTime = 0; let min = "00"; let hours = 6; 
 
 let time ={
 	
 	wClock: function(){
-	
-		wTime+=2;
+		
+		wTime+=wTimeSpeed;
+	if(start){
+		min = 0;
+	}
 	if(min > 59){
 		wTime = 0;
 		hours++;
@@ -738,7 +742,6 @@ let objects = {
 		function draw(){
 			if(mode == "gm"){
 				c.canvas.removeEventListener("mousedown", draw,false)
-				console.log("me")
 			}
 			else{
 			while(iy < objectSizeY){
@@ -939,14 +942,50 @@ function loop()
 
 
 let currfFood = 0;
+let currDish = 0;
+
+function foodAndEating(){
+	fFood = 1*(farmAmount*nFarm);
+	if(hours > 6 && wTime == 0 || wTime == 3000){
+		currfFood += fFood;
+	}
+	if(start && (hours == 6 && wTime == 0) || (hours == 13 && wTime == 2500) || (hours == 19 && wTime == 0)){
+		
+		if(fDish > 0){
+			currDish = maxPop;
+			let p=0;
+			while(p < currDish){
+				if(fDish == 0){
+					currFFood -= currDish*2;
+					p++
+				}
+				if(fDish > 0){
+					fDish--;
+					p++;
+				}
+			}
+			p = 0;
+		}
+		else if(fFood > 0){
+			currDish = maxPop;
+			let p=0;
+			while(p < currDish){
+				if(fDish == 0){
+					currFFood -= currDish*2;
+					p++
+				}
+				if(fFood > 0){
+					fFood--;
+					p++;
+				}
+			}
+
+		}
+	}
+}
 
 let gameInfo= document.getElementById("gameInfo")
 function init(){
-	
-	fFood = 1*(farmAmount*nFarm);
-	if(hours == 24 && min == 0){
-		currfFood += fFood;
-	}
 	
 	gameInfo.innerHTML = "Populacja: "+currPop+"/"+maxPop+"   |   "+"Tryb: "+mode+" Czas: "+hours+":"+min+
 	"<hr></hr>Statystyki profesji: <br>"+
@@ -961,6 +1000,7 @@ function init(){
 	"Kamyki: "+account
 	;
 	loop()
+	foodAndEating()
 	
 	window.requestAnimationFrame(init);
 }
