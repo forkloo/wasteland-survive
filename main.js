@@ -5,7 +5,7 @@ c.canvas.height = height;
 var width = 1000;
 c.canvas.width = width;
 	
-var scaledSize = 64; //wielkość tekstur x i y
+var scaledSize = 64; //wielkość tekstur
 var scrollZone = 60;
 
 var cursorX, cursorY, overlayMouseX, overlayMouseY;
@@ -18,7 +18,7 @@ let wTimeSpeed = 2;
 
 let kitchAmount=0; let armAmount=0; let workAmount=0; let wellAmount=0; let genAmount=0; let bedAmount=0; let bathAmount=0; let dinAmount=0; let farmAmount = 0;
 let nExpl = 0; let nFarm = 0; let nColl = 0;
-let fFood = 1*(farmAmount*nFarm); let fDish = 0;
+let fFood = farmAmount*nFarm; let fDish = kitchAmount*2;
 let maxPop = 0; let currPop = 0;
 let account = 100;
 
@@ -46,10 +46,10 @@ var world1 = {
 			3,3,0,0,3,3, , , ,0, ,4,0, , , , , , , , , , , , , , , , , , , , , , ,
 			3,3,3,0,3,3,3, , , , ,0,0, , , ,6, , , , , , , , , , , , , , , , , , ,
 			3,3,3,3,3,3, , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-			, , , ,0, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			3,3,3,3,0, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			3,3,3, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			3,3, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			3, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
 			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
 			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
 			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
@@ -76,133 +76,44 @@ var world1 = {
 	,
 	[]],
 
-	resources: [ 
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , 1, 1, , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-	
-	],
-
 	build: [ 
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-		, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
-	
-	],
+		 
+			 , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			 , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			 , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			 , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			 , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			 , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			 , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			 , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			 , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			, , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ,
+			]
 	}
 var worldTile = 0;
 
@@ -358,27 +269,30 @@ function drawBuildings(worldTile)
 	}
 }
 
-
-
+let eprice = 50; let fprice = 10; let cprice = 25;
 let createNpc = {
 	explorer : function(){
-		if(currPop > 0){
+		eprice = 50 + (nExpl*2);
+		if(currPop > 0 && eprice < account && nExpl != 3){
 			nExpl += 1;
+			account -= eprice;
 			currPop -= 1;
 			return;
 		}
-		
 	},
 	explorerOut : function(){
 		if(nExpl > 0){
 			nExpl -= 1;
+			account += 25;
 			currPop += 1;
 			return;
 		}
 	},
 	farmer : function(){
-		if(currPop > 0){
+		fprice = 10 + (nFarm*2);
+		if(currPop > 0 && fprice < account && nFarm != 20){
 		nFarm += 1;
+		account -= fprice;
 		currPop -= 1;
 		return;
 		}
@@ -387,15 +301,19 @@ let createNpc = {
 	farmerOut : function(){
 		if(nFarm > 0){
 			nFarm -= 1;
+			account += 5;
 			currPop += 1;
 			return;
+			
 		}
 		
 	},
 	collector : function(){
-		if(currPop > 0)
+		cprice = 25 + (nColl*2);
+		if(currPop > 0 && cprice < account && nColl != 5) 
 		{
 		nColl += 1;
+		account -= cprice;
 		currPop -= 1;
 		return;
 		}
@@ -403,12 +321,12 @@ let createNpc = {
 	collectorOut : function(){
 		if(nColl > 0){
 			nColl -= 1;
+			account += 15;
 			currPop += 1;
 			return;
 		}
-		
-	},
-}
+	}
+};
 
 let cCommands = {
 	cactus: function(){
@@ -427,136 +345,138 @@ let cCommands = {
 
 }
 
-function getMouse(e) 
+function getMouse(e) //koordynaty myszy
 {
-	middleX = width/2;
-	middleY = height/2;
+	cursorX = e.clientX - c.canvas.offsetLeft + camera.x; //X kursora
+	cursorY = e.clientY - c.canvas.offsetTop + camera.y; //Y kursora
 
-	cursorX = e.clientX - c.canvas.offsetLeft + camera.x;
-	cursorY = e.clientY - c.canvas.offsetTop + camera.y;
-
-	overlayMouseX = e.clientX - c.canvas.offsetLeft;
-	overlayMouseY = e.clientY - c.canvas.offsetTop;
+	overlayMouseX = e.clientX - c.canvas.offsetLeft; //X myszy w kanwie
+	overlayMouseY = e.clientY - c.canvas.offsetTop; //Y myszy w kanwie
 }
 
-let editTile; let cEditTile; let buildInfo = document.getElementById("build"); let items = document.getElementById("itemContainer");
-function editor(e)
+let editTile; //kafelek na mapie
+let cEditTile; //wybrany kafelek
+
+function editor(e) //kursor
 {
-	editX = (tileX * scaledSize) - camera.x;
-	editY = (tileY * scaledSize) - camera.y;
+	editX = (tileX * scaledSize) - camera.x; //X kafelka
+	editY = (tileY * scaledSize) - camera.y; //Y kafelka
 	c.strokeStyle = "red";
 	c.rect(editX, editY, scaledSize*objectSizeX, scaledSize*objectSizeY);
 	c.stroke()
 
-	editTile = (tileY * world1.cols + tileX);
-	cEditTile = world1.build[editTile];
-	c.canvas.addEventListener("mousedown", function(){
-	if(mode == "gm"){
-		if(cEditTile == 2){
-			
-			pause = true;
-			function manage(){
-				let explorer = document.createElement("button");
-				let collector = document.createElement("button");
-				let mainB = document.createElement("button");
-	
-				explorer.innerHTML = "Wyślij Wędrowca<br>(Powróci rano)";
-				collector.innerHTML = "Wydaj zadanie Zbieraczowi<br>(Powróci rano)";
-				mainB.innerHTML = "Powrót<br>do<br>Rekrutacji"
-	
-				//explorer.onclick = manageNpc.explorer;
-				collector.onclick = collectorMenu;
-				mainB.onclick = main;
-				
-				buildInfo.innerHTML = "Baza<hr></hr>Zarządzaj: <br><br>";
-	
-				buildInfo.appendChild(explorer);
-				buildInfo.appendChild(collector);
-				buildInfo.appendChild(mainB);
-				}
-			function main(){
-				let explorer = document.createElement("button");
-				let explorerOut = document.createElement("button");
-	
-				let farmer = document.createElement("button");
-				let farmerOut = document.createElement("button");
-	
-				let collector = document.createElement("button");
-				let collectorOut = document.createElement("button");
-				
-				let manageB = document.createElement("button");
-
-				explorer.innerHTML = "Poszukiwacz";
-				explorerOut.innerHTML = "Odwołaj jednego";
-	
-				farmer.innerHTML = "Farmer";
-				farmerOut.innerHTML = "Odwołaj jednego";
-	
-				collector.innerHTML = "Zbieracz";
-				collectorOut.innerHTML = "Odwołaj jednego";
-	
-				manageB.innerHTML = "Zarządzaj";
-
-				explorer.onclick = createNpc.explorer;
-				farmer.onclick = createNpc.farmer;
-				collector.onclick = createNpc.collector;
-	
-				explorerOut.onclick = createNpc.explorerOut;
-				farmerOut.onclick = createNpc.farmerOut;
-				collectorOut.onclick = createNpc.collectorOut;
-
-				manageB.onclick = manage;
-				
-				buildInfo.innerHTML = "Baza<hr></hr>Rekrutuj: <br><br>";
-	
-				buildInfo.appendChild(explorer);
-				buildInfo.appendChild(explorerOut);
-				buildInfo.appendChild(farmer);
-				buildInfo.appendChild(farmerOut);
-				buildInfo.appendChild(collector);
-				buildInfo.appendChild(collectorOut);
-				buildInfo.appendChild(manageB);
-				}
-			
-			function collectorMenu(){
-				let cactusB = document.createElement("button");
-				let waterB = document.createElement("button");
-				let foodB = document.createElement("button");
-				let blueprintsB = document.createElement("button");
-				let cancel = document.createElement("button");
-				
-				cactusB.innerHTML = "Szukaj<br>kaktusów";
-				waterB.innerHTML = "Szukaj<br>wody";
-				foodB.innerHTML = "Szukaj<br>pożywienia";
-				blueprintsB.innerHTML = "Szukaj<br>planów";
-				cancel.innerHTML = "Anuluj";
-
-				cactusB.onclick = cCommands.cactus;
-				waterB.onclick = cCommands.water;
-				foodB.onclick = cCommands.food;
-				blueprintsB.onclick = cCommands.blueprints;
-				cancel.onclick = manage;
-			
-				buildInfo.innerHTML = "Baza<hr></hr>Wydaj dwa priorytety: <br><br>";
-	
-				buildInfo.appendChild(cactusB);
-				buildInfo.appendChild(waterB);
-				buildInfo.appendChild(foodB);
-				buildInfo.appendChild(blueprintsB);
-				buildInfo.appendChild(cancel);
-			}
-			
-			main()
-		}
-		else{
-			pause = false;
-			buildInfo.innerHTML = "";
-		}
-	}
-	}, false);
+	editTile = (tileY * world1.cols + tileX); //kafelek na mapie
+	cEditTile = world1.build[editTile]; //wybrany kafelek
 }
 
-//let univBuildCheckX = (!isNaN(world.build[editTile-1]) || !isNaN(world.build[editTile+objectSizeX]) || !isNaN(world.build[(editTile+world1.cols)-1]) || !isNaN(world.build[(editTile+world1.cols)+objectSizeX]))
+let buildInfo = document.getElementById("build"); let items = document.getElementById("itemContainer");
+
+function buildMng(){
+	c.canvas.addEventListener("mousedown", function(){
+		if(mode == "gm"){
+			if(cEditTile == 2){ //gdy wybrano bazę
+				pause = true;
+				function manage(){ //zarządzanie społecznością
+					//let explorer = document.createElement("button");
+					let collector = document.createElement("button");
+					let mainB = document.createElement("button");
+		
+					//explorer.innerHTML = "Wyślij Wędrowca<br>(Powróci rano)";
+					collector.innerHTML = "Wydaj zadanie Zbieraczowi<br>(Powróci rano)";
+					mainB.innerHTML = "Powrót<br>do<br>Rekrutacji"
+		
+					//explorer.onclick = manageNpc.explorer;
+					collector.onclick = collectorMenu;
+					mainB.onclick = main;
+					
+					buildInfo.innerHTML = "Baza<hr></hr>Zarządzaj: <br><br>";
+		
+					//buildInfo.appendChild(explorer);
+					buildInfo.appendChild(collector);
+					buildInfo.appendChild(mainB);
+					}
+				function main(){ //główne menu
+					//let explorer = document.createElement("button");
+					//let explorerOut = document.createElement("button");
+		
+					let farmer = document.createElement("button");
+					let farmerOut = document.createElement("button");
+		
+					let collector = document.createElement("button");
+					let collectorOut = document.createElement("button");
+					
+					let manageB = document.createElement("button");
+	
+					//explorer.innerHTML = "Poszukiwacz";
+					//explorerOut.innerHTML = "Odwołaj jednego";
+		
+					farmer.innerHTML = "Farmer<br>(" + fprice + ")";
+					farmerOut.innerHTML = "Odwołaj<br>jednego";
+		
+					collector.innerHTML = "Zbieracz<br>(" + cprice + ")";
+					collectorOut.innerHTML = "Odwołaj<br>jednego";
+		
+					manageB.innerHTML = "Zarządzaj";
+	
+					//explorer.onclick = createNpc.explorer;
+					farmer.onclick = createNpc.farmer;
+					collector.onclick = createNpc.collector;
+		
+					//explorerOut.onclick = createNpc.explorerOut;
+					farmerOut.onclick = createNpc.farmerOut;
+					collectorOut.onclick = createNpc.collectorOut;
+	
+					manageB.onclick = manage;
+					
+					buildInfo.innerHTML = "Baza<hr></hr>Rekrutuj: <br><br>";
+		
+					//buildInfo.appendChild(explorer);
+					//buildInfo.appendChild(explorerOut);
+					buildInfo.appendChild(farmer);
+					buildInfo.appendChild(farmerOut);
+					buildInfo.appendChild(collector);
+					buildInfo.appendChild(collectorOut);
+					buildInfo.appendChild(manageB);
+					
+					}
+				
+				function collectorMenu(){ //menu zbieracza
+					let cactusB = document.createElement("button");
+					let waterB = document.createElement("button");
+					let foodB = document.createElement("button");
+					let blueprintsB = document.createElement("button");
+					let cancel = document.createElement("button");
+					
+					cactusB.innerHTML = "Szukaj<br>kaktusów";
+					waterB.innerHTML = "Szukaj<br>wody";
+					foodB.innerHTML = "Szukaj<br>pożywienia";
+					blueprintsB.innerHTML = "Szukaj<br>planów";
+					cancel.innerHTML = "Anuluj";
+	
+					cactusB.onclick = cCommands.cactus;
+					waterB.onclick = cCommands.water;
+					foodB.onclick = cCommands.food;
+					blueprintsB.onclick = cCommands.blueprints;
+					cancel.onclick = manage;
+				
+					buildInfo.innerHTML = "Baza<hr></hr>Wydaj+"+nColl+"zadania: <br><br>";
+		
+					buildInfo.appendChild(cactusB);
+					buildInfo.appendChild(waterB);
+					buildInfo.appendChild(foodB);
+					buildInfo.appendChild(blueprintsB);
+					buildInfo.appendChild(cancel);
+				}
+				
+				main()
+			}
+			else{
+				pause = false;
+				buildInfo.innerHTML = "";
+			}
+		}
+		}, false);
+}
 
 let objects = {
 	base: function(){
@@ -581,7 +501,6 @@ let objects = {
 		if(mode == "gm") {return;}
 		if(mode == "edit"){
 		
-		
 		objectSizeX = 4; objectSizeY = 3;
 		let ix = 0; let iy = 0;
 		function draw(){
@@ -591,6 +510,7 @@ let objects = {
 			}
 			iy = 0;
 			account -= 35;
+			currPop -= 2;
 			kitchAmount++;
 			c.canvas.removeEventListener("mousedown", draw,false)
 			return;
@@ -611,6 +531,7 @@ let objects = {
 			}
 			iy = 0;
 			account -= 100;
+			currPop --;
 			workAmount++;
 			c.canvas.removeEventListener("mousedown", draw,false)
 			return;
@@ -749,7 +670,7 @@ let objects = {
 				ix = 0; iy++; 
 			}
 			iy = 0;
-			account -= 5;
+			account -= 15;
 			farmAmount++;
 			}
 		}
@@ -773,16 +694,16 @@ function editMode()
 	let lazn = document.createElement("button");
 	let jad = document.createElement("button");
 
-	kuch.innerHTML = "Kuchnia"
-	warsz.innerHTML = "Warsztat"
-	farm.innerHTML = "Farma"
+	kuch.innerHTML = "Kuchnia<br>(35)"
+	warsz.innerHTML = "Warsztat<br>(100)"
+	farm.innerHTML = "Farma<br>(15)"
 
-	stud.innerHTML = "Studnia"
-	gen.innerHTML = "Generator"
+	stud.innerHTML = "Studnia<br>(20)"
+	gen.innerHTML = "Generator<br>(20)"
 
-	syp.innerHTML = "Sypialnia"
-	lazn.innerHTML = "Łaźnie"
-	jad.innerHTML = "Jadalnia"
+	syp.innerHTML = "Sypialnia<br>(35)"
+	lazn.innerHTML = "Łaźnie<br>(25)"
+	jad.innerHTML = "Jadalnia<br>(50)"
 
 	kuch.onclick = objects.kitchen
 	warsz.onclick = objects.workshop
@@ -810,7 +731,8 @@ if(mode == "gm")
 {
 	pause = false;
 	objectSizeX = 1; objectSizeY = 1;
-	items.innerHTML = ""
+	items.innerHTML = "";
+
 }
 }
 
@@ -851,8 +773,6 @@ function loop()
 	drawLand(world1.wtile)
 	drawBuildings(world1.wtile)
 	
-
-
 	if(!pause && !start)
 	{
 		time.wClock();
@@ -860,7 +780,8 @@ function loop()
 		drawBuildings(world1.wtile)
 		objectSizeX = 1; objectSizeY = 1;
 		editor();
-
+		buildMng();
+		editMode()
 		document.addEventListener('keydown', getKeyDown, false);
 
 		window.addEventListener("mousemove", getMouse, false);
@@ -881,36 +802,15 @@ function loop()
 			{
 			camera.x -= camera.velocity;
 			}
-
-		
-		
-		
-		// if(right){
-		// 	camera.x += 5;
-		// }
-		// if(left){
-		// 	camera.x -= 5;
-		// }
-		// if(up){
-		// 	camera.y -= 5;
-		// }
-		// if(down){
-		// 	camera.y += 5;
-		// }
-
 	}
 	if(pause)
 	{
-		//document.addEventListener('keydown', getKeyDown, false);
-		//document.addEventListener('keyup', getKeyUp, false);
 		window.addEventListener("mousemove", getMouse, false);
 		drawLand(world1.wtile)
 		drawBuildings(world1.wtile)
 		editor()
 	}
 	if(start){
-		//document.addEventListener('keydown', getKeyDown, false);
-		//document.addEventListener('keyup', getKeyUp, false);
 		window.addEventListener("mousemove", getMouse, false);
 		drawLand(world1.wtile)
 		drawBuildings(world1.wtile)
@@ -945,14 +845,23 @@ let currfFood = 0;
 let currDish = 0;
 
 function foodAndEating(){
-	fFood = 1*(farmAmount*nFarm);
+	fFood = farmAmount*nFarm;
+	fDish = kitchAmount*2;
+	//Pora zbiorów
 	if(hours > 6 && wTime == 0 || wTime == 3000){
-		currfFood += fFood;
+		currfFood += fFood; // farmy
+		console.log(kitchAmount*2)
+		if(currfFood > 2 && currfFood > kitchAmount*2){ //kuchnie
+
+			currDish += fDish;
+			currfFood -= 2*kitchAmount;
+		}
 	}
-	if(start && (hours == 6 && wTime == 0) || (hours == 13 && wTime == 2500) || (hours == 19 && wTime == 0)){
+	//Pora jedzenia
+	if(!start && (hours == 6 && wTime == 0) || (hours == 13 && wTime == 2500) || (hours == 19 && wTime == 0)){
 		
 		if(fDish > 0){
-			currDish = maxPop;
+			currDish -= maxPop;
 			let p=0;
 			while(p < currDish){
 				if(fDish == 0){
@@ -967,7 +876,7 @@ function foodAndEating(){
 			p = 0;
 		}
 		else if(fFood > 0){
-			currDish = maxPop;
+			currfFood -= maxPop*2;
 			let p=0;
 			while(p < currDish){
 				if(fDish == 0){
@@ -986,19 +895,20 @@ function foodAndEating(){
 
 let gameInfo= document.getElementById("gameInfo")
 function init(){
-	
-	gameInfo.innerHTML = "Populacja: "+currPop+"/"+maxPop+"   |   "+"Tryb: "+mode+" Czas: "+hours+":"+min+
-	"<hr></hr>Statystyki profesji: <br>"+
-	"Poszukiwacze: "+nExpl+
-	"<br>"+"Farmerzy: "+nFarm+
-	"<br>"+"Zbieracze: "+nColl+"<hr></hr>"+
+
+	gameInfo.innerHTML = "Populacja: "+currPop+" / "+maxPop+" || "+"Tryb: "+mode+" || Czas: "+hours+":"+min+
+	"<hr></hr>Statystyki profesji: <br></br>"+
+	"Poszukiwacze: *niedostępne* / 3"+
+	"<br>"+"Farmerzy:"+nFarm+" / 20"+
+	"<br>"+"Zbieracze: "+nColl+" / 5<hr></hr>"+
 	"Surowce<br></br>"+
 	"Surowe warzywa: "+currfFood+"<br>"+
-	"Posiłki: "+"fDish<br>"+
+	"Posiłki: "+currDish+"<br>"+
 	"Woda: "+"fWater<br>"+
 	"Prąd: "+"gElectr<br><br>"+
 	"Kamyki: "+account
 	;
+	document.addEventListener('keydown', getKeyDown, false);
 	loop()
 	foodAndEating()
 	
